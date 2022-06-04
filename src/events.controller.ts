@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, ValidationPipe } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, MoreThan, Repository } from 'typeorm';
 import { CreateEventDto } from './create-event.dto';
@@ -40,14 +40,14 @@ export class EventsController {
     }
 
     @Post()
-    async create(@Body() input: CreateEventDto) {
+    async create(@Body(new ValidationPipe({ groups: ['create'] })) input: CreateEventDto) {
         return await this.repository.save({
             ...input,
             when: new Date(input.when),
         });
     }
     @Patch(':id')
-    async update(@Param() id, @Body() input: UpdateEventDto) {
+    async update(@Param() id, @Body(new ValidationPipe({ groups: ['update'] })) input: UpdateEventDto) {
         const event = await this.repository.findOne(id);
 
         return await this.repository.save({
