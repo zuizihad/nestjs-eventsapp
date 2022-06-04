@@ -14,7 +14,6 @@ export class EventsController {
     @Get(':id')
     findOne(@Param() id) {
         const event = this.events.find(event => event.id === parseInt(id));
-
     }
     @Post()
     create(@Body() input: CreateEventDto) {
